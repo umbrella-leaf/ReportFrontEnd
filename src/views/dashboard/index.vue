@@ -20,6 +20,9 @@
       <template #nickname="{text}">
         <a>{{ text }}</a>
       </template>
+      <template #message="{text}">
+        <span v-html="parse_emoji(text)" />
+      </template>
       <template #appendix="{text: appendices}">
         <span v-for="appendix in appendices">
           <a-button type="link" @click="showAppendix(appendix)">
@@ -49,6 +52,7 @@ import {ref} from "vue";
 import {getReportsByCond} from "@/api/reports";
 import AppendixShow from "@/components/AppendixShow/AppendixShow.vue";
 import SelectDrawer from "@/components/SelectDrawer/SelectDrawer.vue";
+import {parse_emoji} from "@/utils/emoji_parse";
 
 const conditions = ref({
   start: undefined,
@@ -101,6 +105,7 @@ const columns = [
     dataIndex: 'message',
     key: 'message',
     width: '30%',
+    slots: {customRender: 'message'}
   },
   {
     title: '发送时间',
