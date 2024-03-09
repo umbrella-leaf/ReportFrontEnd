@@ -3,23 +3,29 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "serve": "vite",
+    "build": "vite build"
   },
   "dependencies": {
     "@ant-design-vue/pro-layout": "^3.2.5",
-    "ant-design-vue": "^4.0.0-rc.6",
+    "ant-design-vue": "^3.2.0",
+    "axios": "^1.6.7",
     "core-js": "^3.8.3",
+    "store": "^2.0.12",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.3",
-    "vuex": "^4.0.0"
+    "vue-router": "^4.0.3"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-plugin-router": "~5.0.0",
-    "@vue/cli-plugin-vuex": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
-    "sass": "^1.32.7",
-    "sass-loader": "^12.0.0"
+    "@vitejs/plugin-vue": "^2.3.1",
+    "babel-plugin-import": "^1.13.8",
+    "less": "^4.2.0",
+    "less-loader": "^11.1.0",
+    "rollup-plugin-visualizer": "^5.6.0",
+    "unplugin-auto-import": "^0.5.11",
+    "unplugin-vue-components": "^0.17.21",
+    "vite": "^2.9.5",
+    "vite-plugin-optimize-persist": "^0.1.2",
+    "vite-plugin-package-config": "^0.1.1",
+    "vitest": "^0.9.3"
   }
 }
