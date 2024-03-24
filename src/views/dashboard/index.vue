@@ -61,9 +61,10 @@ const conditions = ref({
   keyword: undefined,
 })
 
+const prevPageSize = ref(10);
+
 const paginationOpt = ref({
   current: 1,
-  defaultCurrent: 1,
   defaultPageSize: 10,
   total: 0,
   showSizeChanger: true,
@@ -71,11 +72,16 @@ const paginationOpt = ref({
   pageSizeOptions: ["10", "20", "50"],
   showTotal: (total) => `共 ${total} 条`,
   onShowSizeChange: (current, pageSize) => {
+    prevPageSize.value = paginationOpt.value.defaultPageSize;
     paginationOpt.value.current = 1;
     paginationOpt.value.defaultPageSize = pageSize;
     getDataList();
   },
   onChange: (current, size) => {
+    if (size !== prevPageSize.value) {
+      prevPageSize.value = size;
+      return;
+    }
     paginationOpt.value.current = current;
     paginationOpt.value.defaultPageSize = size;
     getDataList();
