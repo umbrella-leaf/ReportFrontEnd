@@ -26,7 +26,7 @@
       <template #appendix="{text: appendices}">
         <span v-for="appendix in appendices">
           <a-button type="link" @click="showAppendix(appendix)">
-            {{AppendixIsImage(appendix) ? '查看图片' : '查看视频'}}
+            {{get_button_name_from_appendix_type(appendix)}}
           </a-button>&nbsp;
         </span>
       </template>
@@ -34,7 +34,6 @@
     <AppendixShow
       :visible="appendixVisible"
       :url="appendixUrl"
-      :is-image="appendixIsImage"
       @close="closeAppendix"
     />
     <SelectDrawer
@@ -52,7 +51,7 @@ import {ref} from "vue";
 import {getReportsByCond} from "@/api/reports";
 import AppendixShow from "@/components/AppendixShow/AppendixShow.vue";
 import SelectDrawer from "@/components/SelectDrawer/SelectDrawer.vue";
-import {parse_emoji} from "@/utils/emoji_parse";
+import {AppendixType, get_button_name_from_appendix_type, parse_emoji} from "@/utils";
 
 const conditions = ref({
   start: undefined,
@@ -150,14 +149,10 @@ function getDataList(select = false) {
 // 附件查看框
 const appendixVisible = ref(false);
 const appendixUrl = ref("")
-const appendixIsImage = ref(false);
-function AppendixIsImage(appendix) {
-  return appendix.endsWith('image');
-}
+
 function showAppendix(url) {
   appendixVisible.value = true;
   appendixUrl.value = url;
-  appendixIsImage.value = AppendixIsImage(url);
 }
 function closeAppendix() {
   appendixVisible.value = false;
