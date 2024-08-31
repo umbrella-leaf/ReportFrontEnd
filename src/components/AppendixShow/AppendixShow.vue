@@ -5,6 +5,7 @@
         <a-image v-if="_type === AppendixType.IMAGE" style="width: 100%" :src="url" />
         <video v-else-if="_type === AppendixType.VIDEO" :src="url" controls style="width: 100%;" />
         <ReplyChainShow v-else-if="_type === AppendixType.REPLY" :reply-chain="replyChain" />
+        <ForwardShow :forward-messages="forwardMessages" v-else-if="_type === AppendixType.FORWARD" />
       </a-spin>
     </div>
   </a-modal>
@@ -13,8 +14,9 @@
 <script setup>
 import {computed, ref, onUpdated, nextTick, h} from "vue";
 import {LoadingOutlined} from "@ant-design/icons-vue";
-import {AppendixType, get_button_name_from_appendix_type, get_resource_suffix} from "@/utils";
-import ReplyChainShow from "@/components/AppendixShow/ReplyChainShow.vue";
+import {AppendixType, fetch_resources, get_button_name_from_appendix_type, get_resource_suffix} from "@/utils";
+import ReplyChainShow from "@/components/AppendixShow/Reply/ReplyChainShow.vue";
+import ForwardShow from "@/components/AppendixShow/Forward/ForwardShow.vue";
 
 const props = defineProps({
   visible: {
@@ -48,6 +50,7 @@ function cancel() {
 }
 
 const replyChain = ref(null);
+const forwardMessages = ref([]);
 
 onUpdated(() => {
   if (props.visible) {
@@ -66,18 +69,26 @@ onUpdated(() => {
           loading.value = false;
         }
       } else if (resourceType === AppendixType.REPLY) {
-        fetch(props.url).then((response) => {
-          return response.json()
-        }).then((data) => {
-          loading.value = false;
-          replyChain.value = data;
-        })
+        fetch_resources(props.url)
+            .then((data) => {
+              loading.value = false;
+              replyChain.value = data;
+            });
+      } else if (resourceType === AppendixType.FORWARD) {
+        fetch_resources(props.url)
+            .then((data) => {
+              loading.value = false;
+              forwardMessages.value = data;
+            });
       }
     })
   }
 })
 </script>
 
-<style scoped>
-
+<style>
+.ant-modal-body {
+  max-height: 70vh;
+  overflow: auto;
+}
 </style>
