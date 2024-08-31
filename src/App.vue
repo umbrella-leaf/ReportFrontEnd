@@ -20,6 +20,10 @@ useUserTheme();
   z-index: 20;
 }
 
+.ant-modal div[aria-hidden="true"] {
+  display: none !important
+}
+
 /*.slide-left-enter-active,*/
 /*.slide-left-leave-active,*/
 /*.slide-right-enter-active,*/
