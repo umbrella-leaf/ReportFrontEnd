@@ -1,22 +1,26 @@
 import {parse_emoji} from "./emoji_parse";
+import {h} from "vue";
+import {Image} from 'ant-design-vue'
+import ForwardShow from "@/components/AppendixShow/Forward/ForwardShow.vue";
+import {AppendixType, fetch_resources} from "@/utils/index";
 
-let image_url_reg = /http.*?image/g;
-let video_url_reg = /http.*?video/g;
-let reply_url_reg = /http.*?reply/g;
 
-
-export function segment_concat(segments) {
-    let message = "";
+export async function segment_concat(segments) {
+    let components = [];
     for (let segment of segments) {
-        if (image_url_reg.test(segment)) {
-            message += `<img src="${segment}" style="width: 100%"/>`;
-        } else if (video_url_reg.test(segment)) {
-            message += `<video src="${segment}" style="width: 100%"/>`;
-        } else if (reply_url_reg.test(segment)) {
+        if (segment.startsWith("http")) {
+            if (segment.endsWith(AppendixType.IMAGE)) {
+                components.push(h(Image, {src: segment, style: "width: 100%"}));
+            } else if (segment.endsWith(AppendixType.VIDEO)) {
+                components.push(h("video", {src: segment, controls: true, style: "width: 100%"}));
+            } else if (segment.endsWith(AppendixType.REPLY)) {
 
+            } else if (segment.endsWith(AppendixType.FORWARD)) {
+                components.push(h(ForwardShow, {forwardMessages: await fetch_resources(segment)}));
+            }
         } else {
-            message += parse_emoji(segment);
+            components.push(parse_emoji(segment));
         }
     }
-    return message;
+    return components;
 }

@@ -7,7 +7,10 @@
       <a-avatar :src="replyMessage['avatar_url']" />
     </template>
     <template #content>
-      <p v-html="segment_concat(replyMessage['segments'])"></p>
+      <template v-for="(component, i) in replyComponents">
+        <component v-if="typeof component !== 'string'" :key="`component${i}`" :is="component" />
+        <span v-else :key="`component${i}`" v-html="component"/>
+      </template>
     </template>
     <template #datetime>
       {{replyMessage["send_time"]}}
@@ -19,7 +22,7 @@
 
 <script setup>
 
-import {computed} from "vue";
+import {computed, ref, watchEffect} from "vue";
 import {segment_concat} from "@/utils";
 
 const props = defineProps({
@@ -34,7 +37,12 @@ const props = defineProps({
 });
 
 const replyMessage = computed(() => props.replyChain[props.replyId]);
+const replyComponents = ref([]);
 const hasNextLevelReply = computed(() => "reply_id" in replyMessage.value);
+
+watchEffect(async() => {
+  replyComponents.value = await segment_concat(replyMessage.value['segments']);
+});
 </script>
 
 <style scoped>

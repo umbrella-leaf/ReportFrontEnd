@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import ReplyShow from "@/components/AppendixShow/ReplyShow.vue";
+import ReplyShow from "@/components/AppendixShow/Reply/ReplyShow.vue";
 
 const prop = defineProps({
   replyChain: {
