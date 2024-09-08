@@ -6,6 +6,12 @@
         <video v-else-if="_type === AppendixType.VIDEO" :src="url" controls style="width: 100%;" />
         <ReplyChainShow v-else-if="_type === AppendixType.REPLY" :reply-chain="replyChain" />
         <ForwardShow :forward-messages="forwardMessages" v-else-if="_type === AppendixType.FORWARD" />
+        <iframe v-else-if="_type === AppendixType.DOCUMENT"
+                :src="get_document_show_url(url)"
+                frameborder="0"
+                style="width: 100%; height: 60vh;"
+                allowfullscreen
+                loading="lazy" />
       </a-spin>
     </div>
   </a-modal>
@@ -14,7 +20,13 @@
 <script setup>
 import {computed, ref, onUpdated, nextTick, h} from "vue";
 import {LoadingOutlined} from "@ant-design/icons-vue";
-import {AppendixType, fetch_resources, get_button_name_from_appendix_type, get_resource_suffix} from "@/utils";
+import {
+  AppendixType,
+  fetch_resources,
+  get_button_name_from_appendix_type,
+  get_document_show_url,
+  get_resource_suffix
+} from "@/utils";
 import ReplyChainShow from "@/components/AppendixShow/Reply/ReplyChainShow.vue";
 import ForwardShow from "@/components/AppendixShow/Forward/ForwardShow.vue";
 
@@ -54,6 +66,7 @@ const forwardMessages = ref([]);
 
 onUpdated(() => {
   if (props.visible) {
+    loading.value = true;
     nextTick(() => {
       const modal = document.getElementsByClassName("ant-modal")[0];
       const resourceType = _type.value;
@@ -80,6 +93,13 @@ onUpdated(() => {
               loading.value = false;
               forwardMessages.value = data;
             });
+      } else if (resourceType === AppendixType.DOCUMENT) {
+        const resource = modal.getElementsByTagName("iframe")[0];
+        const callback = () => {
+          loading.value = false;
+          resource.removeEventListener("load", callback);
+        }
+        resource.addEventListener("load", callback);
       }
     })
   }
@@ -89,6 +109,10 @@ onUpdated(() => {
 <style>
 .ant-modal-body {
   max-height: 70vh;
-  overflow: auto;
+  overflow-y: auto;
+}
+.ant-modal:has(iframe) {
+  max-width: 68vw;
+  width: unset !important;
 }
 </style>

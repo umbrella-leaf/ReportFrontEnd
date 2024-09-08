@@ -51,7 +51,7 @@ import {ref} from "vue";
 import {getReportsByCond} from "@/api/reports";
 import AppendixShow from "@/components/AppendixShow/AppendixShow.vue";
 import SelectDrawer from "@/components/SelectDrawer/SelectDrawer.vue";
-import {AppendixType, get_button_name_from_appendix_type, parse_emoji} from "@/utils";
+import {get_button_name_from_appendix_type, parse_emoji} from "@/utils";
 
 const conditions = ref({
   start: undefined,
@@ -138,7 +138,7 @@ function getDataList(select = false) {
     const rows = res.data.rows;
     rows.forEach(row => {
       if (row["appendix"].length === 0) return;
-      row["appendix"] = row["appendix"].split(" ");
+      row["appendix"] = row["appendix"].split("\n");
     });
     data.value = rows;
     paginationOpt.value.total = res.data.total;
